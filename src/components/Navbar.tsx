@@ -6,6 +6,13 @@ import { FiShoppingBag } from "react-icons/fi";
 import { RxHamburgerMenu, RxCross2 } from "react-icons/rx";
 import { CiShoppingTag } from "react-icons/ci";
 import { usePathname } from "next/navigation";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -78,6 +85,16 @@ export const Navbar = () => {
               1
             </div>
           </div>
+          <SignedOut>
+            <SignInButton>
+              <button className="px-4 py-2 bg-amber-600 text-white rounded-full cursor-pointer">
+                SignIn
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </div>
 
         {/* MOBILE ICONS + MENU BUTTON */}
