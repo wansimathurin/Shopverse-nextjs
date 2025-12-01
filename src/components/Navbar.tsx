@@ -4,11 +4,14 @@ import React, { useEffect, useState } from "react";
 import { CiSearch, CiHeart } from "react-icons/ci";
 import { FiShoppingBag } from "react-icons/fi";
 import { RxHamburgerMenu, RxCross2 } from "react-icons/rx";
+import { CiShoppingTag } from "react-icons/ci";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const path = usePathname()
+  console.log("Current Path:", path);
   const links = [
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
@@ -37,12 +40,12 @@ export const Navbar = () => {
         }`}
       >
         {/* LOGO */}
-        <h1 className="font-extrabold text-2xl md:text-3xl">ShopVerse</h1>
+        <h1 className={`${scrolled ? "text-gray-600" : "text-white"} font-extrabold text-2xl md:text-3xl flex`}><CiShoppingTag size={ 30} />ShopVerse</h1>
 
         {/* DESKTOP LINKS */}
         <div className="hidden md:flex gap-8">
           {links.map((link) => (
-            <Link key={link.name} href={link.href}>
+            <Link key={link.name} href={link.href} className={`${scrolled ? "text-gray-600" : "text-white"} ${path==link.href && '!text-amber-600 !font-bold'} font-medium hover:underline`}>
               {link.name}
             </Link>
           ))}
