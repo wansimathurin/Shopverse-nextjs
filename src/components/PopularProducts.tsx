@@ -6,7 +6,7 @@ import { ProductCard } from './ProductCard'
 
 
 export interface Product {
-    _id: string;
+    _id: number;
     title: string;
     des: string;
     price: number;

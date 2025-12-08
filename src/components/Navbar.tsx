@@ -5,7 +5,7 @@ import { CiSearch, CiHeart } from "react-icons/ci";
 import { FiShoppingBag } from "react-icons/fi";
 import { RxHamburgerMenu, RxCross2 } from "react-icons/rx";
 import { CiShoppingTag } from "react-icons/ci";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   SignInButton,
   SignUpButton,
@@ -13,10 +13,14 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs'
+import { FancyThemeSwitch } from "./FancyThemeSwitch";
+import { useStoreFavorite } from "@/store/favorite.store";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+  const [query, setQuery] = useState('');
   const path = usePathname()
   console.log("Current Path:", path);
   const links = [
@@ -33,6 +37,13 @@ export const Navbar = () => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  const { selectedFavoriteIds } = useStoreFavorite()
+  
+   const handleSubmit = (e: React.FormEvent) => {
+     e.preventDefault();
+     if (!query) return;
+     router.push(`/search?query=${query}`);
+   }
 
   return (
     <>
@@ -60,24 +71,27 @@ export const Navbar = () => {
 
         {/* SEARCH + ICONS (Desktop) */}
         <div className="hidden md:flex gap-5 items-center">
-          <div
+          <form
             className="px-3 bg-gray-200 dark:bg-gray-800 py-2 rounded-full
            flex items-center gap-2"
+            onSubmit={handleSubmit}
           >
             <CiSearch size={22} />
             <input
               type="text"
+              value={query}
               placeholder='search for "Phones"'
               className="bg-transparent outline-none text-sm"
+              onChange={(e)=>setQuery(e.target.value)}
             />
-          </div>
+          </form>
 
-          <div className="relative">
+          <Link href={'/favorites'} className="relative">
             <CiHeart size={30} />
             <div className="bg-red-700 h-4 w-4 rounded-full absolute -top-1 -right-1 flex items-center justify-center text-white text-[10px]">
-              1
+              {selectedFavoriteIds.length}
             </div>
-          </div>
+          </Link>
 
           <div className="relative">
             <FiShoppingBag size={25} />
@@ -95,6 +109,7 @@ export const Navbar = () => {
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
+          {!scrolled && <FancyThemeSwitch />}
         </div>
 
         {/* MOBILE ICONS + MENU BUTTON */}
