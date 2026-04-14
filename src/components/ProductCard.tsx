@@ -4,13 +4,15 @@ import { FaStar } from 'react-icons/fa6'
 import { FaStarHalfAlt } from 'react-icons/fa'
 import { TiHeartFullOutline } from 'react-icons/ti'
 import { useStoreFavorite } from '@/store/favorite.store'
+import { useCartStore } from '@/store/cart.store'
 
 interface ProductCardProps {
   product: Product
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const {selectedFavoriteIds,toggleHeartIcon} = useStoreFavorite()
+  const { selectedFavoriteIds, toggleHeartIcon } = useStoreFavorite()
+  const { addToCart } = useCartStore();
   return (
     <div className='h-[400px] w-[300px] ring ring-gray-200 rounded-[50px] 
       flex items-center justify-center flex-col gap-2 overflow-hidden group 
@@ -38,6 +40,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         rounded-full absolute bottom-5 transition-all
         duration-300 opacity-0 translate-y-5 
         group-hover:opacity-100 group-hover:translate-y-0`}
+        onClick={() => addToCart(product)}
       >
         Add to Cart
       </button>

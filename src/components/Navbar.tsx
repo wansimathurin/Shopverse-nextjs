@@ -15,6 +15,7 @@ import {
 } from '@clerk/nextjs'
 import { FancyThemeSwitch } from "./FancyThemeSwitch";
 import { useStoreFavorite } from "@/store/favorite.store";
+import { useCartStore } from "@/store/cart.store";
 
 export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -38,6 +39,16 @@ export const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
   const { selectedFavoriteIds } = useStoreFavorite()
+    const {
+      cart,
+      removeFromCart,
+      increaseQty,
+      decreaseQty,
+      clearCart,
+      getTotalPrice,
+      getTotalItems,
+    } = useCartStore();
+  const totalItems = getTotalItems();
   
    const handleSubmit = (e: React.FormEvent) => {
      e.preventDefault();
@@ -93,12 +104,12 @@ export const Navbar = () => {
             </div>
           </Link>
 
-          <div className="relative">
+          <Link href={'/cart'} className="relative">
             <FiShoppingBag size={25} />
             <div className="bg-red-700 h-4 w-4 rounded-full absolute -top-1 -right-1 flex items-center justify-center text-white text-[10px]">
-              1
+              {cart.length > 0 ? totalItems : 0}
             </div>
-          </div>
+          </Link>
           <SignedOut>
             <SignInButton>
               <button className="px-4 py-2 bg-amber-600 text-white rounded-full cursor-pointer">
