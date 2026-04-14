@@ -1,10 +1,25 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { createJSONStorage, persist, StateStorage } from 'zustand/middleware'
 
 interface FavoriteState {
     selectedFavoriteIds: number[]
     toggleHeartIcon: (id: number) => void
     clearAll: () => void
+}
+
+const noopStorage: StateStorage = {
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {},
+}
+
+const getSafeStorage = () => {
+    if (typeof window === 'undefined') return noopStorage
+    try {
+        return window.localStorage
+    } catch {
+        return noopStorage
+    }
 }
 
 export const useStoreFavorite = create<FavoriteState>()(
@@ -26,6 +41,7 @@ export const useStoreFavorite = create<FavoriteState>()(
         }),
         {
             name: 'favorite-store',
+            storage: createJSONStorage(getSafeStorage),
         }
     )
 );

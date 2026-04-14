@@ -4,9 +4,9 @@ import { Product } from "@/components/PopularProducts";
 import { ProductCard } from "@/components/ProductCard";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
-const Page = () => {
+const SearchPageContent = () => {
   const query = useSearchParams().get("query");
   console.log("Search Query:", query);
   const [products, setProducts] = useState<Product[]>([]);
@@ -39,6 +39,14 @@ const Page = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const Page = () => {
+  return (
+    <Suspense fallback={<div className="p-10 mt-20">Loading search results...</div>}>
+      <SearchPageContent />
+    </Suspense>
   );
 };
 export default Page;
